@@ -8,5 +8,5 @@ fd1d.pdf:  description of what the code does, with examples,
 compressible_single_phase.m: code
 
 CONTRIBUTORS:
-Developer: Malgorzata Peszynska, Oregon State University,
+Primary developer: Malgorzata Peszynska, Oregon State University,Home
 Code and documentation editor: Michael Renne 
