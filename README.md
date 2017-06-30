@@ -3,10 +3,10 @@ WHAT:
 family of MATLAB codes for solving simple PDEs in 1d
 
 FILES:
-README.md
-fd1d.pdf:  description of what the code does, with examples
-compressible_single_phase.m
+README.md: this file
+fd1d.pdf:  description of what the code does, with examples,
+compressible_single_phase.m: code
 
 CONTRIBUTORS:
-Developer: Malgorzata Peszynska, Oregon State University
+Developer: Malgorzata Peszynska, Oregon State University,
 Code and documentation editor: Michael Renne 
