@@ -1,10 +1,12 @@
 # fd1d
-%%%%%%%%%%%%%%%
+WHAT:
+family of MATLAB codes for solving simple PDEs in 1d
 
-fd1d is a MATLAB code solving Darcy problem -nabla (k \nabla p) =f, on (a,b), with (some) boundary conditions at a,b.
+FILES:
+README.md
+fd1d.pdf:  description of what the code does, with examples
+compressible_single_phase.m
 
-The discretization is with CCFD, and non-uniform grid.
-
-Data: a,b,k,f
-
-%%%%%%%%%%%%%%%%
+CONTRIBUTORS:
+Developer: Malgorzata Peszynska, Oregon State University
+Code and documentation editor: Michael Renne 
