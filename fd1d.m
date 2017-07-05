@@ -3,7 +3,7 @@ function [u,h,xx,dirval1,dirval2,qflux1,qflux2] = ...
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% FD1D 
 %% fd1d(nx,a,b,val1,val2,flag1,flag2,flagf) 
-%% 1d FD cell-centered solution to Poisson equation on (0,1)
+%% 1d FD cell-centered solution to Poisson equation on (a,b)
 %% user must code rhsfun, exfun (at bottom of code)
 %% flag1 == 0: Dirichlet values on both ends
 %% flag1 == -1: Neumann values on both ends
