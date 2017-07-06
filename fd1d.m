@@ -1,8 +1,8 @@
 function [u,h,xx,dirval1,dirval2,qflux1,qflux2] = ...
     fd1d (nx,a,b,val1,val2,flag1,flag2,flagf) 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% FD1D 
-%% fd1d(nx,a,b,val1,val2,flag1,flag2,flagf) 
+%% FD1D
+%% fd1d(nx,a,b,val1,val2,flag1,flag2,flagf)
 %% 1d FD cell-centered solution to Poisson equation on (a,b)
 %% user must code permfun, rhsfun, exfun (at bottom of code)
 %% val1, val2 are values of bdary data on left and right endpoints
