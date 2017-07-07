@@ -85,6 +85,11 @@ xplot = x + dx/2;
 
 plot(xplot, exfun(xplot),xplot,nsol,'r*');
 
+%%export plot as .PNG
+pic_name = strcat('fd1d_plot_ex');
+set(gcf, 'PaperUnits', 'inches', 'PaperSize', [600/96,200/96], 'PaperPosition', [0 0 600/96 200/96]);
+print('-dpng', '-r96', pic_name);
+
 %%%%%% post-processing: extract boundary fluxes and Dirichlet data 
 
 if flag1 == 0
