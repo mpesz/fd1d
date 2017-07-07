@@ -62,7 +62,7 @@ else
     q = dx.* rhsfun (x+dx/2);
 end;
 
-%% contributions of bdary conditions to the matrix and rhs 
+%% contributions of bdary conditions to the matrix and rhs
 if flag1 == 0
     i = 1; gr = 1;       
     stiff(gr,gr) = stiff(gr,gr) + tx(i);   
@@ -85,12 +85,7 @@ xplot = x + dx/2;
 
 plot(xplot, exfun(xplot),xplot,nsol,'r*');
 
-%%export plot as .PNG
-pic_name = strcat('fd1d_plot_ex');
-set(gcf, 'PaperUnits', 'inches', 'PaperSize', [600/96,200/96], 'PaperPosition', [0 0 600/96 200/96]);
-print('-dpng', '-r96', pic_name);
-
-%%%%%% post-processing: extract boundary fluxes and Dirichlet data 
+%%%%%% post-processing: extract boundary fluxes and Dirichlet data
 
 if flag1 == 0
     dirval1 = val1;
