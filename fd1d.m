@@ -1,5 +1,6 @@
 function [u,h,xx,dirval1,dirval2,qflux1,qflux2] = ...
     fd1d (nx,a,b,val1,val2,flag1,flag2,flagf)
+%%test line
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% FD1D
 %% fd1d(nx,a,b,val1,val2,flag1,flag2,flagf)
