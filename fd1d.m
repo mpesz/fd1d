@@ -1,14 +1,13 @@
 function [u,h,xx,dirval1,dirval2,qflux1,qflux2] = ...
     fd1d (nx,a,b,val1,val2,flag1,flag2,flagf)
-%%test line
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% FD1D
 %% fd1d(nx,a,b,val1,val2,flag1,flag2,flagf)
-%% 1d FD cell-centered solution to Poisson equation on (a,b) 
-%% user must code permfun, rhsfun, exfun (at bottom of code) 
-%% val1, val2 are values of bdary data on left and right endpoints 
-%% flag1/2 == 0: val1/2 is a Dirichlet value 
-%% flag1/2 == -1: val1/2 is a Neumann value 
+%% 1d FD cell-centered solution to Poisson equation on (a,b)
+%% user must code permfun, rhsfun, exfun (at bottom of code)
+%% val1, val2 are values of bdary data on left and right endpoints
+%% flag1/2 == 0: val1/2 is a Dirichlet value
+%% flag1/2 == -1: val1/2 is a Neumann value
 %% flagf == 0: Set rhs = 0 (optional argument)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Outputs:
