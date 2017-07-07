@@ -1,8 +1,8 @@
 function [u,h,xx,dirval1,dirval2,qflux1,qflux2] = ...
-    fd1d (nx,a,b,val1,val2,flag1,flag2,flagf)
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% FD1D
-%% fd1d(nx,a,b,val1,val2,flag1,flag2,flagf)
+    fd1d (nx,a,b,val1,val2,flag1,flag2,flagf) 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% FD1D 
+%% fd1d(nx,a,b,val1,val2,flag1,flag2,flagf) 
 %% 1d FD cell-centered solution to Poisson equation on (a,b)
 %% user must code permfun, rhsfun, exfun (at bottom of code)
 %% val1, val2 are values of bdary data on left and right endpoints
@@ -20,7 +20,7 @@ function [u,h,xx,dirval1,dirval2,qflux1,qflux2] = ...
 %% [u,h,x,d1,d2,f1,f2]=fd1d(1000,0,1,0,0,0,0);
 %% [u,h,x,d1,d2,f1,f2]=fd1d(30,0,1,0,-pi,0,-1);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-if nargin <= 7
+if nargin <= 7 
     flagf = 1;
 end;
 dx = (b-a)/nx*ones(nx,1); x0 = a; 
