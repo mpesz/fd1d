@@ -1,4 +1,4 @@
-function [xplot,nsols] = fd1d (nx,dt,bdaryflag,outflag) 
+function [xplot,nsols] = fd1d_heat (nx,dt,bdaryflag,outflag) 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% fd1d (nx,dt,bdaryflag,outflag)
 %% 1D FD cell-centered solution to heat equation on (0,1)
