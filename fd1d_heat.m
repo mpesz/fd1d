@@ -1,15 +1,24 @@
 function [xplot,nsols] = fd1d_heat (nx,dt,bdaryflag,outflag) 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% fd1d (nx,dt,bdaryflag,outflag)
+%% fd1d_heat (nx,dt,bdaryflag,outflag)
 %% 1D FD cell-centered solution to heat equation on (0,1)
-%% user must code the functions permfun, rhsfun, exfun,dexfun,initfun INSIDE the code
-%% bdaryflag == 0: Dirichlet (nonhomogeneous) values on both ends
-%% bdaryflag !=0: Neumann (nonhomogeneous) values on both ends
-%% note: user must code exfun. dexfun to deliver these values
-%% dt ==0 : steady state solution only 
-%% outflag =0: only plot solution in time 
-%% outflag > 0: consider exact solution, compute error etc.
+%% user must code the functions permfun, porfun, rhsfunt, 
+%%    initfun, exfun, dexfun INSIDE the code (below)
+%% nx is the number of sub-intervals of (0,1)
+%% dt is the time step
+%% dt == 0: steady state solution only
+%% bdaryflag == 0: Dirichlet (nonhomogeneous) BC on both ends
+%% bdaryflag != 0: Neumann (nonhomogeneous) BC on both ends
+%% note: user must code exfun/dexfun to deliver the BC values 
+%% outflag == 0: only plot solution in time 
+%% outflag != 0: consider exact solution, compute error etc.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Outputs:
+%% xplot : the cell-centers
+%% nsols : the numerical solution
+%%   the code will also plot the numerical solution
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 dx = 1/nx * ones(nx,1); x0 = 0; 
 
 t1 = 0; t2 = 1;
@@ -25,6 +34,7 @@ xplot = x + dx/2;
 
 %% permeability coefficient
 perm = x; perm(:,1) = permfun(x(:,1)+ dx(:,1)/2);
+
 %% porosity coefficient
 if transient, por = x; por(:,1) = porfun(x(:,1)+ dx(:,1)/2);end;
 
@@ -66,7 +76,6 @@ if transient
     nsol = initfun ( x + dx/2 );    
 end;
 
-%nsols = zeros(nt,nx);
 nsols = [];
 for n = 1 : nt %  time step loop
     t = t1 + n*dt;
@@ -94,17 +103,12 @@ for n = 1 : nt %  time step loop
         q(nx) = q(nx) + dt*val2;
     end
 
-% condest(stiff)
 %%%%% find numerical solution
     nsol = stiff \ q;
  
     nsols = [nsols, nsol];
     if outflag == 0
-        fprintf('\ntime step %d at t = %g',n,t1+n*dt);
         plot(xplot,nsol,'r*-'),
-        hold on;
-        %plot(xplot,xplot-nsol,'b-'),
-        hold off;
         axis([0 1 -1 1]);
         pause(.2);
     else
@@ -113,17 +117,20 @@ for n = 1 : nt %  time step loop
         plot(xplot,sol,'b',xplot,nsol,'r*-'),
         axis ([0 1 0 0.5]);
         pause(.1);
-        %plot(xplot,sol,'b*',xplot,xplot,'r');axis([0,1,-1,1]);
         errvec = [errvec; norm(sol-nsol,inf)];
     end
-% return;
-% pause
 end
-errornorm = max(errvec);
-fprintf('dx = %g dt = %g error = %g ',max(dx),dt,errornorm);
+if outflag ~= 0 
+    errornorm = max(errvec);
+    fprintf('dx = %g dt = %g error = %g \n',max(dx),dt,errornorm);
+end;
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Comment/Uncomment related examples below, or code/create your own. 
+%% Ensure input parameters are consistent with choices below.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function v = permfun(x)
+%v = 1;
 v = zeros(size(x,1),1);
 for j=1:size(x,1)
     if abs(x(j)-.3) < 0.2 v(j) = 1e-1;
@@ -135,18 +142,19 @@ function v = porfun(x)
 v = 1;
 
 function v = rhsfunt(x,t)
-%v = 2*(t) + x.*(1-x);
-v = zeros(size(x));
+v = 2*(t) + x.*(1-x);
+%v = zeros(size(x));
 
 function v = initfun(x)
-%v = exfun(x,0);
-%v = ones(size(x));
-v = zeros(size(x));
+v = exfun(x,0);
+%v = zeros(size(x));
 
 function v = exfun(x,t)
-%v = (t)*x.*(1-x); %% with dirichlet: 0,0 first order, with flux -1,-1 quadratic (superconvergent)
+v = (t)*x.*(1-x); %% with dirichlet: 0,0 first order, with flux -1,-1 quadratic (superconvergent)
 %v = zeros(size(x));
-v = x;
+%v = x;
 
 function v = dexfun (x,t)
 v = (t)*(1-2*x);
+%v = zeros(size(x));
+%v = 1;
