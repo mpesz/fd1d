@@ -44,7 +44,7 @@ porosity     = 0.4;
 
 %%%%%%%%%%%%%%%%%%%%%% tolerance of Newton solver 
 tol = 1e-4; atol = 1e-8; maxiter = 20; 
-if strcmp(implicit_explicit,'explicit'), maxiter = 1;else maxiter = 20;end
+if strcmp(implicit_explicit,'explicit'), maxiter = 1;end %% essentially only Newton iteration is taken: sequential algorithm
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% discretization parameters
 %% depth of the reservoir
@@ -92,7 +92,7 @@ if bdary2 == 0     %% Dirichlet contributions to the transmissibilities
         depthr = 3/2*depth(nx)-1/2*depth(nx-1);
 end
 
-%%%%%%%%%%%%% initialize pressures and saturations
+%%%%%%%%%%%%% initialize pressures
 p = zeros(size(x));
 
 %% initialize the pressure to be approximately hydrostatic
