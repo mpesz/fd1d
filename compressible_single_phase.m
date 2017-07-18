@@ -23,8 +23,7 @@ function compressible_single_phase (nx,dfac,dt0,t1,t2,...
 %%  compressible_single_phase(10,0,0.1,0,1,0,0,0,1000,0,0,0,0,1e3,1)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 echo_input = 1;
-%pmin=-inf; pmax=inf; 
-smin=-inf;smax=inf;
+%
 if echo_input
     fprintf('***********************\n');
     fprintf ('nx=%d\n',nx);
