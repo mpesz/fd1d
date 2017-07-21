@@ -1,49 +1,53 @@
 function compressible_single_phase (nx,dfac,dt0,t1,t2,...
     bdary1,bdary2,val1,val2,...
-    upwind,...
-    variable_switch,...
     implicit_explicit,...
     pmin,pmax, ...
     ifpause)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% 1D FD cell-centered solution to compressible flow equation PRESSURE UNKNOWN
-%% <nx,dfac,dt0,t1.t2>: physical domain
-%% dfac=0:depth=0,dfac=1: depth=x;
-%% bdary? == 0: Dirichlet (nonhomogeneous) values (use val1, val2)
-%% bdary? == 1: Neumann flux condiion
-%% upwind = 0: use artithmetic aeveraging
-%% upwind = -1: use harmonic
-%% upwind = 1: use upwinding
-%% explicit and implicit time stepping, variables 's' and 'p' 
-%% pmin pmax smin smax - parameters for plotting 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% No-flow at the bottom, vertical
-%%  compressible_single_phase(10,1,0.1,0,1,0,1,2000,0,0,0,0,0,5e4,1)
-%% horizontal case, Dirichlet conditions
-%%  compressible_single_phase(10,0,0.1,0,1,0,0,0,1000,0,0,0,0,1e3,1)
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 1D FD cell-centered solution to compressible flow equation 
+%% PRESSURE UNKNOWN
+%% <nx, dfac, dt0, t1, t2>: physical domain
+%%    nx: Number of sub-intervals of (a,b) (hard-coded(0,0.6))
+%%    dfac: sin(angle), angle=0 horizontal, angle= pi/2 vertical
+%%    dt0: time step over the time interval (t1,t2).
+%% dfac == 0: depth = 0,    dfac == 1: depth = x;
+%% bdary1/2 == 0: Dirichlet (nonhomogeneous) values val1/2
+%% bdary1/2 == 1: Neumann flux values val1/2
+%% implicit_explicit == 'explicit': Solve sequentially
+%% <pmin, pmax, ifpause>: parameters for plotting
+%% Note: This is hard-coded with SI units, K with [m^2], 
+%%		pressure with [Pa].  
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Outputs:
+%%   the code will plot the numerical solution over time
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Examples:
+%%  No-flow at the bottom, vertical
+%%   compressible_single_phase(10,1,0.1,0,1,0,1,2000,0,0,0,5e4,1)
+%%  Horizontal case, Dirichlet conditions
+%%   compressible_single_phase(10,0,0.1,0,1,0,0,0,1000,0,0,1e3,1)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 echo_input = 1;
-%
 if echo_input
     fprintf('***********************\n');
     fprintf ('nx=%d\n',nx);
     fprintf('dfacl=%g\n',dfac);
     fprintf('dt0=%g T in [%g,%g]\n',dt0,t1,t2);
-    fprintf('initialization option: upwind=%d impl_expl=%\n',upwind, implicit_explicit);
+    fprintf('initialization option: impl_expl=%\n',implicit_explicit);
     fprintf('bdary conditions: type %d %d values %g %g\n',bdary1,bdary2,val1,val2);
-    fprintf('display options: plot p in  [%g,%g] sat in [%g,%g]\n', pmin,pmax,smin,smax);
-    fprintf('pause parameter=%d\n',    ifpause) ;
+    fprintf('display options: plot p in  [%g,%g] \n', pmin,pmax);
+    fprintf('pause parameter=%d\n',  ifpause) ;
     fprintf('***********************\n');
 end
 %%%%%%%%%%%%%%%%%%%%%% rock/sand data
 
-%%% constants to be used for permeability
-permeability = 1e-10;  %%[m2]
+%%% constants to be used for permeability and porosity
+permeability = 1e-10;  %%[m^2]
 porosity     = 0.4;
 
 %%%%%%%%%%%%%%%%%%%%%% tolerance of Newton solver 
-tol = 1e-4; atol = 1e-8; maxiter = 20; 
-if strcmp(implicit_explicit,'explicit'), maxiter = 1;end %% essentially only Newton iteration is taken: sequential algorithm
+tol = 1e-4; atol = 1e-8; maxiter = 20;
+if strcmp(implicit_explicit,'explicit'), maxiter = 1;end %% only one Newton iteration is taken: sequential algorithm
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%% discretization parameters
 %% depth of the reservoir
@@ -72,10 +76,6 @@ ddensity_w = @(p)(compr_w*rhowref*exp(compr_w*(p-pref)));
 density_r = @(p)(rhorref*exp(1e-6*(p-pref)));
 grav = 9.8066; 
 
-%%%%%%%%%%%%%%%%%
-global mydeltat
-mydeltat = dt0;
-
 %%%%% compute transmissibilities: just geometry
 txx = zeros(nx+1,1); 
 for j=2:nx 
@@ -91,15 +91,18 @@ if bdary2 == 0     %% Dirichlet contributions to the transmissibilities
         depthr = 3/2*depth(nx)-1/2*depth(nx-1);
 end
 
-%%%%%%%%%%%%% initialize pressures
+%%%%%%%%%%%%% initialize pressures and saturations
 p = zeros(size(x));
 
 %% initialize the pressure to be approximately hydrostatic
 p = pref + rhowref*grav*depth;
 
-if 1 % ifpause
-    plot(xplot,p);%axis([0 1 pmin pmax]);
+if ifpause
+    plot(xplot,p); axis([0 0.6 pmin pmax]);
     title('Initial condition: pressure');
+    pic_name = strcat('csp_ex2_0');
+    set(gcf, 'PaperUnits', 'inches', 'PaperSize', [600/96,200/96], 'PaperPosition', [0 0 600/96 200/96]);
+    print('-dpng', '-r96', pic_name);
     pause;
 end
 
@@ -132,7 +135,6 @@ while  t< t2 %% && err_level == 0 %  time step loop
     %%
     if t + dt > t2, dt = t2 - t; end;
     %%
-    mydeltat = dt;
     t = t + dt;
     tx = txx*dt;    
     
@@ -242,10 +244,14 @@ while  t< t2 %% && err_level == 0 %  time step loop
     %% save new time step value
     p = pguess;
     
-    if ifpause == 1 %% && rem(n,10) == 0
+    if ifpause == 1 
         titp = sprintf('Pressure   at t=%g step = %d',t,n);
       
-        plot(xplot,p);axis([0 1 pmin pmax]);title(titp);
+        plot(xplot,p);axis([0 0.6 pmin pmax]);
+        title(titp);
+        pic_name = strcat('csp_ex2_',num2str(n));
+        set(gcf, 'PaperUnits', 'inches', 'PaperSize', [600/96,200/96], 'PaperPosition', [0 0 600/96 200/96]);
+        print('-dpng', '-r96', pic_name);
         pause(0.05),
     end    
     
@@ -254,13 +260,18 @@ fprintf('Number of up=%d down=%d original dt=%g final=%g\n',up,down,dt0,dt);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 end
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-function v = permfun(x) %#ok<DEFNU>
-v = ones(size(x));
-end
-function v = porfun(x) %#ok<DEFNU>
-v = ones(size(x));
-end
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Comment/Uncomment examples below, or code/create your own, if 
+%% non-constant permeability and/or porosity is desired. 
+%% Ensure input parameters are consistent with choices below.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%function v = permfun(x) %Permeability
+%v = ones(size(x));
+%end
+
+%function v = porfun(x) %Porosity
+%v = ones(size(x));
+%end
 
 
 
