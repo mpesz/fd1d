@@ -100,9 +100,6 @@ p = pref + rhowref*grav*depth;
 if ifpause
     plot(xplot,p); axis([0 0.6 pmin pmax]);
     title('Initial condition: pressure');
-    pic_name = strcat('csp_ex2_0');
-    set(gcf, 'PaperUnits', 'inches', 'PaperSize', [600/96,200/96], 'PaperPosition', [0 0 600/96 200/96]);
-    print('-dpng', '-r96', pic_name);
     pause;
 end
 
@@ -249,9 +246,6 @@ while  t< t2 %% && err_level == 0 %  time step loop
       
         plot(xplot,p);axis([0 0.6 pmin pmax]);
         title(titp);
-        pic_name = strcat('csp_ex2_',num2str(n));
-        set(gcf, 'PaperUnits', 'inches', 'PaperSize', [600/96,200/96], 'PaperPosition', [0 0 600/96 200/96]);
-        print('-dpng', '-r96', pic_name);
         pause(0.05),
     end    
     
