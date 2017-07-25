@@ -17,7 +17,6 @@ function [xplot] = fd1d_heat (nx,dt,bdaryflag,outflag)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Outputs:
 %% xplot : the cell-centers
-%% nsols : the numerical solution
 %%   the code will also plot the numerical solution
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Examples:
