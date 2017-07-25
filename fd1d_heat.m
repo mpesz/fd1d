@@ -4,19 +4,27 @@ function [xplot] = fd1d_heat (nx,dt,bdaryflag,outflag)
 %% 1D FD cell-centered solution to heat equation on (xbeg,xend)
 %% user must code the functions permfun, porfun, rhsfunt, 
 %%    initfun, exfun, dexfun INSIDE the code (below)
-%% nx is the number of sub-intervals of (0,1) for uniform grid
-%% dt is the time step
+%% nx: number of sub-intervals of (xbeg,xend) for uniform grid
+%% dt: time step
 %% dt == 0: steady state solution only
 %% bdaryflag == 0: Dirichlet (nonhomogeneous) BC on both ends
-%% bdaryflag != 0: Neumann (nonhomogeneous) BC on both ends
+%% bdaryflag != 0: Neumann (nonhomogeneous) BC on both ends 
 %% note: user must code exfun/dexfun to deliver the BC values 
 %% outflag == 0: only plot solution in time 
 %% outflag != 0: consider exact solution, compute error etc.
+%% note: to obtain best convergence with Neumann BC, be sure
+%%   that dt <= 1/nx^2
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Outputs:
 %% xplot : the cell-centers
 %% nsols : the numerical solution
 %%   the code will also plot the numerical solution
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Examples:
+%% Dirichlet BC
+%%  [xplot] = fd1d_heat(10,0.1,0,1)
+%% Neumann BC 
+%%  [xplot] = fd1d_heat(10,0.01,1,1)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 xbeg = 0; xend = 1;               %% or change to another interval
 dx = (xend-xbeg)/nx * ones(nx,1); %% or code the nonuniform grid 
@@ -34,7 +42,7 @@ x = linspace(xbeg,xend-dx(nx),nx)'; %% x is the left end of each subinterval
 xplot = x + dx/2;  %% xplot is the center of each subinterval
 
 %% permeability coefficient
-perm = 0*xplot; perm = permfun(xplot); %#ok<*NASGU>
+perm = 0*xplot; perm = permfun(xplot); 
 
 %% porosity coefficient
 if transient, por = 0*x; por= porfun(xplot);end
@@ -72,7 +80,7 @@ errvec = zeros(nt,1);
 
 if transient
     for j=1:nx
-        stiff(j,j) = stiff(j,j) + por(j)*dx(j); %#ok<SPRIX>
+        stiff(j,j) = stiff(j,j) + por(j)*dx(j); 
     end
     nsol = initfun ( xplot);    
 end
