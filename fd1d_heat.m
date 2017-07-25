@@ -126,7 +126,7 @@ for n = 1 : nt %  time step loop
         plot(xplot,sol,'b',xplot,nsol,'r*-'),
         axis ([0 1 0 0.5]);
         pause(.1);
-        errvec (n)= norm(sol-nsol,inf);
+        errvec (n)= sqrt(max(dx(1:end)))*norm(sol-nsol,2);
     end
 end
 if outflag ~= 0 
